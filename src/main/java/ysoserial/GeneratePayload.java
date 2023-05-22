@@ -52,21 +52,21 @@ public class GeneratePayload {
 			new ArrayList<Class<? extends ObjectPayload>>(ObjectPayload.Utils.getPayloadClasses());
 		Collections.sort(payloadClasses, new Strings.ToStringComparator()); // alphabetize
 
-        final List<String[]> rows = new LinkedList<String[]>();
-        rows.add(new String[] {"Payload", "Authors", "Dependencies"});
-        rows.add(new String[] {"-------", "-------", "------------"});
-        for (Class<? extends ObjectPayload> payloadClass : payloadClasses) {
-             rows.add(new String[] {
-                payloadClass.getSimpleName(),
-                Strings.join(Arrays.asList(Authors.Utils.getAuthors(payloadClass)), ", ", "@", ""),
-                Strings.join(Arrays.asList(Dependencies.Utils.getDependenciesSimple(payloadClass)),", ", "", "")
-            });
-        }
+		final List<String[]> rows = new LinkedList<String[]>();
+		rows.add(new String[] {"Payload", "Authors", "Dependencies"});
+		rows.add(new String[] {"-------", "-------", "------------"});
+		for (Class<? extends ObjectPayload> payloadClass : payloadClasses) {
+			rows.add(new String[] {
+				payloadClass.getSimpleName(),
+				Strings.join(Arrays.asList(Authors.Utils.getAuthors(payloadClass)), ", ", "@", ""),
+				Strings.join(Arrays.asList(Dependencies.Utils.getDependenciesSimple(payloadClass)),", ", "", "")
+			});
+		}
 
-        final List<String> lines = Strings.formatTable(rows);
+		final List<String> lines = Strings.formatTable(rows);
 
-        for (String line : lines) {
-            System.err.println("     " + line);
-        }
-    }
+		for (String line : lines) {
+			System.err.println("     " + line);
+		}
+	}
 }
