@@ -14,10 +14,9 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 RUN mv target/ysoserial-*all*.jar target/ysoserial.jar
 
+
 FROM java:8-jdk-alpine
 
 WORKDIR /app
-
 COPY --from=builder /app/target/ysoserial.jar .
-
 ENTRYPOINT ["java", "-jar", "ysoserial.jar"]
