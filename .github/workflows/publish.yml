@@ -1,8 +1,10 @@
 name: publish jar
+
 on:
   push:
     tags:
       - "v*.*.*"
+
 permissions:
   contents: write
 
@@ -19,22 +21,26 @@ jobs:
           java-version: '8'
           distribution: 'adopt'
           cache: 'maven'
+      - name: Set up Maven
+        uses: stCarolas/setup-maven@v4.5
+
       - name: Set version
         run: mvn versions:set -DnewVersion=${{ github.ref_name }}
       - name: Build jar
-        run: mvn -B clean package -DskipTests 
-      # - name: publish maven jar
-      #   run: mvn -B deploy -DskipTests -DrepositoryId=github
+        run: mvn -B clean package -DskipTests
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-
-      - name: Rename artifact
-        run: mv target/ysoserial-${{ github.ref_name }}-all.jar target/ysoserial-all.jar
+      - name: Rename artifacts
+        run: |
+          mv target/ysoserial-${{ github.ref_name }}-all.jar target/ysoserial-all.jar
+          mv target/ysoserial-${{ github.ref_name }}.jar target/ysoserial.jar
 
       - name: Publish GitHub release
         uses: softprops/action-gh-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}        
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          files: target/ysoserial-all.jar
+          files: |
+            target/ysoserial-all.jar
+            target/ysoserial.jar
