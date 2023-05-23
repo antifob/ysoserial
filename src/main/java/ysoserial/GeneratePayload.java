@@ -45,7 +45,7 @@ public class GeneratePayload {
 	}
 
 	private static void usage(final java.io.PrintStream ps) {
-		ps.println("Y SO SERIAL ?");
+		ps.println("Y SO SERIAL?");
 		ps.println("usage: ysoserial payload [arg...]");
 		ps.println("  Available payload types:");
 
