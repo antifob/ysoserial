@@ -1,12 +1,12 @@
 package ysoserial;
 
-import java.io.PrintStream;
 import java.util.*;
 
 import ysoserial.payloads.ObjectPayload;
 import ysoserial.payloads.ObjectPayload.Utils;
 import ysoserial.payloads.annotation.Authors;
 import ysoserial.payloads.annotation.Dependencies;
+
 
 @SuppressWarnings("rawtypes")
 public class GeneratePayload {
@@ -15,16 +15,17 @@ public class GeneratePayload {
 
 	public static void main(final String[] args) {
 		if (args.length != 2) {
-			printUsage();
+			usage(System.err);
 			System.exit(USAGE_CODE);
 		}
+
 		final String payloadType = args[0];
 		final String command = args[1];
 
 		final Class<? extends ObjectPayload> payloadClass = Utils.getPayloadClass(payloadType);
 		if (payloadClass == null) {
 			System.err.println("Invalid payload type '" + payloadType + "'");
-			printUsage();
+			usage(System.err);
 			System.exit(USAGE_CODE);
 			return; // make null analysis happy
 		}
@@ -32,21 +33,21 @@ public class GeneratePayload {
 		try {
 			final ObjectPayload payload = payloadClass.newInstance();
 			final Object object = payload.getObject(command);
-			PrintStream out = System.out;
-			Serializer.serialize(object, out);
+			Serializer.serialize(object, System.out);
 			ObjectPayload.Utils.releasePayload(payload, object);
 		} catch (Throwable e) {
 			System.err.println("Error while generating or serializing payload");
 			e.printStackTrace();
 			System.exit(INTERNAL_ERROR_CODE);
 		}
+
 		System.exit(0);
 	}
 
-	private static void printUsage() {
-		System.err.println("Y SO SERIAL?");
-		System.err.println("Usage: java -jar ysoserial-[version]-all.jar [payload] '[command]'");
-		System.err.println("  Available payload types:");
+	private static void usage(final java.io.PrintStream ps) {
+		ps.println("Y SO SERIAL ?");
+		ps.println("usage: ysoserial payload [arg...]");
+		ps.println("  Available payload types:");
 
 		final List<Class<? extends ObjectPayload>> payloadClasses =
 			new ArrayList<Class<? extends ObjectPayload>>(ObjectPayload.Utils.getPayloadClasses());
@@ -66,7 +67,7 @@ public class GeneratePayload {
 		final List<String> lines = Strings.formatTable(rows);
 
 		for (String line : lines) {
-			System.err.println("     " + line);
+			ps.println("  " + line);
 		}
 	}
 }
