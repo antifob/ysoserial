@@ -67,7 +67,7 @@ public class GeneratePayload {
 		final List<String> lines = Strings.formatTable(rows);
 
 		for (String line : lines) {
-			ps.println("  " + line);
+			ps.println("  " + line.trim());
 		}
 	}
 }
